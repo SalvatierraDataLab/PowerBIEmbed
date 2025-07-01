@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Power BI Embed</title>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2.15.1/dist/powerbi.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #reportContainer {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .notification-bar.unselectable.teaching {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="reportContainer"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const embedUrl = params.get("embedUrl");
+    const accessToken = params.get("token");
+    const reportId = params.get("reportId");
+
+    const models = window['powerbi-client'].models;
+
+    const embedConfig = {
+      type: 'report',
+      id: reportId,
+      embedUrl: embedUrl,
+      accessToken: accessToken,
+      tokenType: models.TokenType.Embed,
+      settings: {
+        filterPaneEnabled: false,
+        navContentPaneEnabled: false,
+        layoutType: models.LayoutType.Custom
+      }
+    };
+
+    const container = document.getElementById("reportContainer");
+    const report = powerbi.embed(container, embedConfig);
+
+    report.on("loaded", () => {
+      setTimeout(() => {
+        document.querySelectorAll('.notification-bar.unselectable.teaching')
+          .forEach(el => el.style.display = 'none');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

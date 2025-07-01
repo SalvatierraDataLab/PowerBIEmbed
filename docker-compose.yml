@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  pbi-embed:
+    build:
+      context: .
+    container_name: pbi-embed
+    ports:
+      - "8080:80"
+    restart: unless-stopped
